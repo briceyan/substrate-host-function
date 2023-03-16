@@ -18,6 +18,7 @@ mod benchmarking;
 pub mod pallet {
 	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
+	use host::host_api;
 
 	#[pallet::pallet]
 	#[pallet::generate_store(pub(super) trait Store)]
@@ -72,11 +73,13 @@ pub mod pallet {
 			// https://docs.substrate.io/main-docs/build/origins/
 			let who = ensure_signed(origin)?;
 
+			let n: u32 = host_api::double(something);
+
 			// Update storage.
-			<Something<T>>::put(something);
+			<Something<T>>::put(n);
 
 			// Emit an event.
-			Self::deposit_event(Event::SomethingStored { something, who });
+			Self::deposit_event(Event::SomethingStored { something: n, who });
 			// Return a successful DispatchResultWithPostInfo
 			Ok(())
 		}
